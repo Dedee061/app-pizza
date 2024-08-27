@@ -1,23 +1,57 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SignIn() {
-  return(
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-   <View style={styles.container}>
-    
-    <View style={styles.InputContainer}>
-      <Image source={require('../../assets/Logo.png')} style={styles.logo}/>
-      <TextInput placeholder="Digite seu email" style={styles.input} placeholderTextColor={'#fff7'}/>
-      <TextInput placeholder="Digite sua senha" style={styles.input}  placeholderTextColor={'#fff7'}/>
-      
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Acessar</Text>
-      </TouchableOpacity>
+  const {isAuthenticated,user} = useContext(AuthContext)
 
+  function handlerLogin () {
+    if(email == '' || password == '') {
+      return
+    }
+
+      console.log("Login" + email)
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.InputContainer}>
+        <Image source={require("../../assets/Logo.png")} style={styles.logo} />
+
+        <Text>{user?.name}</Text>
+
+        <TextInput
+          placeholder="Digite seu email"
+          style={styles.input}
+          placeholderTextColor={"#fff7"}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          placeholder="Digite sua senha"
+          style={styles.input}
+          placeholderTextColor={"#fff7"}
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handlerLogin}>
+          <Text style={styles.buttonText}>Acessar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
-)
+  );
 }
 
 const styles = StyleSheet.create({
@@ -26,44 +60,41 @@ const styles = StyleSheet.create({
     backgroundColor: "#1D1D2E",
     alignItems: "center",
     justifyContent: "center",
-    
   },
-  logo:{
+  logo: {
     marginBottom: 38,
+  },
 
-  }, 
-
-InputContainer: {
-  width: '95%',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingVertical: 34,
-  paddingHorizontal: 10
-} ,
-input: {
-  width: '95%',
-  height: 40,
-  backgroundColor: '#101026',
-  marginBottom: 10,
-  paddingHorizontal: 10,
-  color: '#fff',
-  borderRadius: 8,
-  borderWidth: 0.7,
-  borderColor: '#8A8A8A'
-},
-button:{
-  width: '95%',
-  height: 40,
-  backgroundColor: '#3FFFA3',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: 8,
-  marginTop: 20
-},
-buttonText:{
+  InputContainer: {
+    width: "95%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 34,
+    paddingHorizontal: 10,
+  },
+  input: {
+    width: "95%",
+    height: 40,
+    backgroundColor: "#101026",
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: "#fff",
+    borderRadius: 8,
+    borderWidth: 0.7,
+    borderColor: "#8A8A8A",
+  },
+  button: {
+    width: "95%",
+    height: 40,
+    backgroundColor: "#3FFFA3",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  buttonText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#101026',
-}
-
+    fontWeight: "bold",
+    color: "#101026",
+  },
 });
