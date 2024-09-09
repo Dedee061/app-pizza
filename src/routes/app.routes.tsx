@@ -8,7 +8,10 @@ import Order from '../pages/Order'
 
 export type StackPramsLst = {
   Dashboard: undefined,
-  Order: undefined
+  Order: {
+    number: number | string, 
+    order_id: string
+  }
 }
 
 const Stack = createNativeStackNavigator<StackPramsLst>()

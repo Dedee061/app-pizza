@@ -26,7 +26,7 @@ export default function Dashboard() {
     if(number === '' || number === null) {
       return;
     }
-    navigation.navigate('Order')
+    navigation.navigate('Order', {number: number, order_id: ''});
 
   }
 
