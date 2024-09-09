@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import React from "react";
 
 import { useRoute, RouteProp } from "@react-navigation/native";
@@ -26,20 +32,34 @@ export default function Order() {
       </View>
 
       <TouchableOpacity style={styles.input}>
-          <Text style={{color: '#fff'}}>Pizzas</Text>
+        <Text style={{ color: "#fff" }}>Pizzas</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.input}>
-      <Text style={{color: '#fff'}}>Pizzas de calabresa</Text>
+        <Text style={{ color: "#fff" }}>Pizzas de calabresa</Text>
       </TouchableOpacity>
 
       <View style={styles.qtdContainer}>
-        <Text style={styles.qtdText}>
-          Quantidade
-        </Text>
-            <TextInput style={[styles.input, {width: '60%', textAlign:'center'}]} placeholder="1" value="1" placeholderTextColor={'#fff7'} keyboardType="numeric"/>
+        <Text style={styles.qtdText}>Quantidade</Text>
+        <TextInput
+          style={[styles.input, { width: "60%", textAlign: "center" }]}
+          placeholder="1"
+          value="1"
+          placeholderTextColor={"#fff7"}
+          keyboardType="numeric"
+        />
       </View>
 
+      <View style={styles.action}>
+        
+      <TouchableOpacity style={styles.buttonAdd}>
+        <Text style={styles.textButton}>+</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.textButton}>Avançar</Text>
+      </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -64,27 +84,54 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: 14,
   },
-  input:{
-    backgroundColor: '#101026',
+  input: {
+    backgroundColor: "#101026",
     borderRadius: 5,
-    width: '100%',
-    height:40,
+    width: "100%",
+    height: 40,
     marginBottom: 12,
-    color: '#fff',
-    justifyContent: 'center',
+    color: "#fff",
+    justifyContent: "center",
     paddingHorizontal: 8,
-    fontSize:20
+    fontSize: 20,
+  },
+  qtdContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  qtdText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  action:{
+    flexDirection: 'row',
+    width: "100%",
+    justifyContent:'space-between',
     
+  },
+  buttonAdd:{
+    backgroundColor: "#3fd1ff",
+    borderRadius: 5,
+    width: '20%',
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
 
   },
-  qtdContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent:'space-between',
-  },
-  qtdText:{
+  textButton:{
+    color: "#101026",
+    fontWeight: "bold",
     fontSize: 20,
-    fontWeight:'bold',
-    color: '#fff'
   },
+  button:{
+    backgroundColor: "#3FFFA3",
+    borderRadius: 5,
+    width: '75%',
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    
+  }
 });
