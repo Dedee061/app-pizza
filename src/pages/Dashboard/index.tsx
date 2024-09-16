@@ -14,20 +14,29 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { StackPramsLst } from "../../routes/app.routes";
+import { api } from "../../service/api";
 
 
 export default function Dashboard() {
   const navigation = useNavigation<NativeStackNavigationProp<StackPramsLst>>()
   const { signOut } = useContext(AuthContext);
-  const [number, setNumber] = useState("");
+  const [number, setNumber] = useState('');
+  
   
 
   async function OpenOrder(){
     if(number === '' || number === null) {
       return;
     }
-    navigation.navigate('Order', {number: number, order_id: ''});
+    const response = await api.post('/order', {
+      table: Number(number),
+      
+    })
+    
+    // console.log(response.data)
 
+    navigation.navigate('Order', {number: number, order_id: response.data.id});
+    setNumber('')
   }
 
   return (
@@ -42,6 +51,7 @@ export default function Dashboard() {
         value={number}
         onChangeText={setNumber}
       />
+    
 
       <TouchableOpacity style={styles.button} onPress={OpenOrder}>
         <Text style={styles.textButton}>Abrir Mesa</Text>
@@ -68,6 +78,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.7,
     borderColor: "#8A8A8A",
     textAlign: "center",
+    
   },
   button: {
     width: "90%",
