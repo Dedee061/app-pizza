@@ -4,9 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useRoute, RouteProp, useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
@@ -19,29 +18,43 @@ type RouterDetailsParams = {
   };
 };
 
+type categoryProps = {
+  id: string | number;
+  name: string;
+};
+
 type OrderRouteProps = RouteProp<RouterDetailsParams, "Order">;
 
 export default function Order() {
-
-  const navigation = useNavigation()
-
-  async function handlerCloseorder ( ) {
-    try {
-     await api.delete('/order', {
-      params:{
-        order_id: route.params?.order_id     
-       
-      }
-     })
-     navigation.goBack()
-      
-    }catch (e) {
-
-    }
-  }
-
   const route = useRoute<OrderRouteProps>();
-  const [qtd, setQtd] = useState('');
+  const [qtd, setQtd] = useState("");
+  const navigation = useNavigation();
+  const [category, setCategory] = useState<categoryProps[] | []>([]);
+  const [categorySelected, setCategorySelected] = useState<categoryProps>();
+
+  const [amount, setAmoumt] = useState("1");
+
+  useEffect(() => {
+    async function loadInfo() {
+      const response = await api.get("/category");
+
+      setCategory(response.data);
+      setCategorySelected(response.data[0]);
+    }
+
+    loadInfo();
+  }, []);
+
+  async function handlerCloseorder() {
+    try {
+      await api.delete("/order", {
+        params: {
+          order_id: route.params?.order_id,
+        },
+      });
+      navigation.goBack();
+    } catch (e) {}
+  }
 
   return (
     <View style={styles.container}>
@@ -52,9 +65,11 @@ export default function Order() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.input}>
-        <Text style={{ color: "#fff" }}>Pizzas</Text>
-      </TouchableOpacity>
+      {category.length !== 0 && (
+        <TouchableOpacity style={styles.input}>
+          <Text style={{ color: "#fff" }}>{categorySelected?.name}</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={styles.input}>
         <Text style={{ color: "#fff" }}>Pizzas de calabresa</Text>
@@ -64,22 +79,20 @@ export default function Order() {
         <Text style={styles.qtdText}>Quantidade</Text>
         <TextInput
           style={[styles.input, { width: "60%", textAlign: "center" }]}
-          placeholder="1"
-          value="1"
-          placeholderTextColor={"#fff7"}
           keyboardType="numeric"
+          value={amount}
+          onChangeText={setAmoumt}
         />
       </View>
 
       <View style={styles.action}>
-        
-      <TouchableOpacity style={styles.buttonAdd}>
-        <Text style={styles.textButton}>+</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonAdd}>
+          <Text style={styles.textButton}>+</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.textButton}>Avançar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.textButton}>Avançar</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -126,33 +139,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
-  action:{
-    flexDirection: 'row',
+  action: {
+    flexDirection: "row",
     width: "100%",
-    justifyContent:'space-between',
-    
+    justifyContent: "space-between",
   },
-  buttonAdd:{
+  buttonAdd: {
     backgroundColor: "#3fd1ff",
     borderRadius: 5,
-    width: '20%',
+    width: "20%",
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-
   },
-  textButton:{
+  textButton: {
     color: "#101026",
     fontWeight: "bold",
     fontSize: 20,
   },
-  button:{
+  button: {
     backgroundColor: "#3FFFA3",
     borderRadius: 5,
-    width: '75%',
+    width: "75%",
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    
-  }
+  },
 });
