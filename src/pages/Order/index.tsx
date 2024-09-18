@@ -25,17 +25,31 @@ export type categoryProps = {
   name: string;
 };
 
+type ProductProps = {
+  id: string 
+  name: string;
+  price: number;
+}
+
 type OrderRouteProps = RouteProp<RouterDetailsParams, "Order">;
 
 export default function Order() {
   const route = useRoute<OrderRouteProps>();
-  const [qtd, setQtd] = useState("");
   const navigation = useNavigation();
+
+  const [qtd, setQtd] = useState("");
   const [category, setCategory] = useState<categoryProps[] | []>([]);
   const [categorySelected, setCategorySelected] = useState<categoryProps>();
   const [modalCategoryVisible, setModalCategoryVisible] = useState(false)
 
+  const [products, setProducts] = useState<ProductProps[] | []>([]) 
+  const [productsSelected, setProductsSelected] = useState<ProductProps | undefined>()
+  const [modalProductVisible, setModalProductVisible] = useState(false)
+
   const [amount, setAmoumt] = useState("1");
+
+
+  //listando categorias
 
   useEffect(() => {
     async function loadInfo() {
@@ -63,6 +77,23 @@ export default function Order() {
     setCategorySelected(item)
   }
 
+  // listando produtos
+
+  useEffect(() => {
+
+    async function loadProducts() {
+      const response = await api.get(`/category/product`, {
+        params: {
+          category_id: categorySelected?.id,
+        },
+      });
+      setProducts(response.data)
+      setProductsSelected(response.data[0])
+    }
+
+    loadProducts()
+  }, [categorySelected])
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -78,9 +109,11 @@ export default function Order() {
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.input}>
-        <Text style={{ color: "#fff" }}>Pizzas de calabresa</Text>
+      {products.length !== 0&& (
+        <TouchableOpacity style={styles.input}>
+        <Text style={{ color: "#fff" }}>{productsSelected?.name}</Text>
       </TouchableOpacity>
+      )} 
 
       <View style={styles.qtdContainer}>
         <Text style={styles.qtdText}>Quantidade</Text>
