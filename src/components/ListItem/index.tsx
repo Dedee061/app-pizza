@@ -8,14 +8,20 @@ interface ItemProsp {
         product_id: string;
         name: string;
         amount: string | number;
-    }
+    };
+    deleteItem: (item_id: string) => void;
 }
 
-export default function ItemList({data}: ItemProsp) {
+export default function ItemList({data, deleteItem}: ItemProsp) {
+
+  function handlerDeleteItem() {
+    deleteItem(data.id)
+  }
+
   return (
     <View style={style.container}>
       <Text style={style.item}>{data.amount} - {data.name}</Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handlerDeleteItem}>
         <Feather name="trash-2" color="#ff3f4b" size={25}/>
       </TouchableOpacity>
     </View>

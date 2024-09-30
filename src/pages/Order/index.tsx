@@ -33,7 +33,7 @@ type ProductProps = {
 };
 
 type ItemProps = {
-  id: string ;
+  id: string;
   product_id: string;
   name: string;
   amount: string | number;
@@ -87,28 +87,22 @@ export default function Order() {
     }
   }
 
-  function handlerChangeCategory(item: categoryProps) {
-    setCategorySelected(item);
-  }
-  function handlerProductChange(item: ProductProps) {
-    setProductsSelected(item);
-  }
 
   async function handlerAdd() {
-    const response = await api.post('/order/add', {
+    const response = await api.post("/order/add", {
       order_id: route.params?.order_id,
       product_id: productsSelected?.id,
       amount: Number(amount),
-    })
+    });
 
     let data = {
       id: response.data.id,
       product_id: productsSelected?.id as string,
       name: productsSelected?.name as string,
-      amount: amount
-    }
-    setItems(oldArray => [...oldArray, data])
-  } 
+      amount: amount,
+    };
+    setItems((oldArray) => [...oldArray, data]);
+  }
 
   // listando produtos
 
@@ -126,14 +120,30 @@ export default function Order() {
     loadProducts();
   }, [categorySelected]);
 
+  function handlerChangeCategory(item: categoryProps) {
+    setCategorySelected(item);
+  }
+  function handlerProductChange(item: ProductProps) {
+    setProductsSelected(item);
+  }
+  async function handlerDeleteItem(item_id: string) {
+    await api.delete('order/remove', {
+      params:{
+        item_id: item_id,
+      }
+    })
+
+    setItems(items.filter((item) => item.id!== item_id));
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Mesa {route.params.number}</Text>
         {items.length === 0 && (
           <TouchableOpacity onPress={handlerCloseorder}>
-          <Feather name="trash-2" size={28} color="#ff3f4b" />
-        </TouchableOpacity>
+            <Feather name="trash-2" size={28} color="#ff3f4b" />
+          </TouchableOpacity>
         )}
       </View>
 
@@ -187,8 +197,8 @@ export default function Order() {
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, marginTop: 24 }}
         data={items}
-        keyExtractor={ (item) => item.id }
-        renderItem={ ({item}) => <ItemList data={item}/> }
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ItemList data={item}  deleteItem={handlerDeleteItem}/>}
       />
 
       <Modal
