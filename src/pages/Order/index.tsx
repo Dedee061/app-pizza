@@ -140,7 +140,10 @@ export default function Order() {
   }
 
   function handlerFinishOrder() {
-    navigation.navigate('Finish')
+    navigation.navigate('Finish', {
+      number: route.params.number,
+      order_id: route.params.order_id,
+    })
   }
 
   return (
